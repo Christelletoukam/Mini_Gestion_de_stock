@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MiniStock.ViewModels"
+             x:Class="MiniStock.Views.LoginPage"
+             x:DataType="vm:LoginViewModel"
+             Title="Connexion"
+             BackgroundColor="{StaticResource StockBackground}">
+    <ScrollView>
+        <VerticalStackLayout Padding="24,12,24,20" Spacing="14">
+            <Image Source="login_market_illustration.png"
+                   HeightRequest="280"
+                   Aspect="AspectFit"
+                   SemanticProperties.Description="Illustration d’un petit commerce" />
+
+            <VerticalStackLayout Spacing="2" Margin="0,-6,0,8">
+                <Label Text="Mini Suivi de Stock"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource StockNavy}"
+                       HorizontalTextAlignment="Center" />
+                <Label Text="Votre stock. En toute simplicité."
+                       FontSize="14"
+                       TextColor="{StaticResource StockMuted}"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Connexion"
+                       FontSize="27"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource StockNavy}" />
+                <Label Text="Heureux de vous retrouver ! Connectez-vous à votre boutique."
+                       FontSize="14"
+                       TextColor="{StaticResource StockMuted}" />
+            </VerticalStackLayout>
+
+            <Border Stroke="{StaticResource StockBorder}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    HeightRequest="62"
+                    Padding="14,4">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="13">
+                    <Label Text="✉"
+                           FontSize="22"
+                           TextColor="{StaticResource StockNavy}"
+                           VerticalOptions="Center" />
+                    <Entry Grid.Column="1"
+                           Text="{Binding Email}"
+                           Placeholder="Email *"
+                           Keyboard="Email"
+                           ReturnType="Next"
+                           TextColor="#273F50"
+                           PlaceholderColor="{StaticResource StockMuted}"
+                           VerticalOptions="Center"
+                           ClearButtonVisibility="WhileEditing" />
+                </Grid>
+            </Border>
+
+            <Border Stroke="{StaticResource StockBorder}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    HeightRequest="62"
+                    Padding="14,4">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="13">
+                    <Label Text="♙"
+                           FontSize="22"
+                           TextColor="{StaticResource StockNavy}"
+                           VerticalOptions="Center" />
+                    <Entry Grid.Column="1"
+                           Text="{Binding MotDePasse}"
+                           Placeholder="Mot de passe *"
+                           IsPassword="{Binding IsPasswordHidden}"
+                           ReturnType="Go"
+                           TextColor="#273F50"
+                           PlaceholderColor="{StaticResource StockMuted}"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="2"
+                           Text="◉"
+                           FontSize="19"
+                           TextColor="{StaticResource StockMuted}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding TogglePasswordCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+            </Border>
+
+            <Label Text="Mot de passe oublié ?"
+                   FontSize="12"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource StockNavy}"
+                   HorizontalTextAlignment="End"
+                   Margin="0,-5,0,0" />
+
+            <Label Text="{Binding Message}"
+                   IsVisible="{Binding AfficherMessage}"
+                   TextColor="{Binding MessageColor}"
+                   FontSize="13" />
+
+            <Button Text="➜  Se connecter"
+                    Command="{Binding SubmitCommand}"
+                    BackgroundColor="{StaticResource StockOrange}"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    CornerRadius="12"
+                    HeightRequest="58"
+                    Margin="0,0,0,4" />
+
+            <HorizontalStackLayout HorizontalOptions="Center"
+                                   Spacing="5"
+                                   Margin="0,10,0,0">
+                <Label Text="Pas encore de compte ?"
+                       FontSize="14"
+                       TextColor="{StaticResource StockMuted}"
+                       VerticalOptions="Center" />
+                <Label Text="S’inscrire"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource StockNavy}"
+                       VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding RegisterCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
