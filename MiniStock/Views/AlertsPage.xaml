@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MiniStock.ViewModels"
+             xmlns:data="clr-namespace:MiniStock.Services"
+             xmlns:views="clr-namespace:MiniStock.Views"
+             x:Class="MiniStock.Views.AlertsPage"
+             x:DataType="vm:AlertsViewModel"
+             Title="Alertes"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{StaticResource StockBackground}">
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="18,12,18,14" Spacing="14">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                    <ImageButton Source="lucide_arrow_left.png" Command="{Binding BackCommand}" WidthRequest="44" HeightRequest="44" Padding="11" BackgroundColor="Transparent" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="Alertes" FontSize="25" FontAttributes="Bold" TextColor="{StaticResource StockNavy}" VerticalOptions="Center" />
+                </Grid>
+
+                <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                    <HorizontalStackLayout Spacing="7">
+                        <Border Padding="13,8" Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="White">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SelectFilterCommand}" CommandParameter="Toutes" /></Border.GestureRecognizers>
+                            <Label Text="{Binding Alerts.Count, StringFormat='Toutes ({0})'}" FontSize="12" TextColor="{StaticResource StockMuted}">
+                                <Label.Triggers><DataTrigger TargetType="Label" Binding="{Binding SelectedFilter}" Value="Toutes"><Setter Property="TextColor" Value="White" /><Setter Property="FontAttributes" Value="Bold" /></DataTrigger></Label.Triggers>
+                            </Label>
+                            <Border.Triggers><DataTrigger TargetType="Border" Binding="{Binding SelectedFilter}" Value="Toutes"><Setter Property="BackgroundColor" Value="{StaticResource StockNavy}" /><Setter Property="Stroke" Value="{StaticResource StockNavy}" /></DataTrigger></Border.Triggers>
+                        </Border>
+                        <Border Padding="13,8" Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="White">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SelectFilterCommand}" CommandParameter="Rupture" /></Border.GestureRecognizers>
+                            <Label Text="{Binding RuptureCount, StringFormat='Rupture ({0})'}" FontSize="12" TextColor="{StaticResource StockMuted}">
+                                <Label.Triggers><DataTrigger TargetType="Label" Binding="{Binding SelectedFilter}" Value="Rupture"><Setter Property="TextColor" Value="White" /><Setter Property="FontAttributes" Value="Bold" /></DataTrigger></Label.Triggers>
+                            </Label>
+                            <Border.Triggers><DataTrigger TargetType="Border" Binding="{Binding SelectedFilter}" Value="Rupture"><Setter Property="BackgroundColor" Value="{StaticResource StockNavy}" /><Setter Property="Stroke" Value="{StaticResource StockNavy}" /></DataTrigger></Border.Triggers>
+                        </Border>
+                        <Border Padding="13,8" Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="White">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SelectFilterCommand}" CommandParameter="Stock faible" /></Border.GestureRecognizers>
+                            <Label Text="{Binding LowStockCount, StringFormat='Stock faible ({0})'}" FontSize="12" TextColor="{StaticResource StockMuted}">
+                                <Label.Triggers><DataTrigger TargetType="Label" Binding="{Binding SelectedFilter}" Value="Stock faible"><Setter Property="TextColor" Value="White" /><Setter Property="FontAttributes" Value="Bold" /></DataTrigger></Label.Triggers>
+                            </Label>
+                            <Border.Triggers><DataTrigger TargetType="Border" Binding="{Binding SelectedFilter}" Value="Stock faible"><Setter Property="BackgroundColor" Value="{StaticResource StockNavy}" /><Setter Property="Stroke" Value="{StaticResource StockNavy}" /></DataTrigger></Border.Triggers>
+                        </Border>
+                    </HorizontalStackLayout>
+                </ScrollView>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding FilteredAlerts}" Spacing="12">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="data:StockProduct">
+                            <VerticalStackLayout Spacing="9" Padding="0,2">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="{Binding Name}" FontSize="15" FontAttributes="Bold" TextColor="#263F50" VerticalOptions="Center" />
+                                    <Border Grid.Column="1" StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="9,4" BackgroundColor="#FFF0EE">
+                                        <Label Text="{Binding StockStatus}" FontSize="10" FontAttributes="Bold" TextColor="{Binding StockStatusColor}" />
+                                    </Border>
+                                </Grid>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="{Binding Quantity, StringFormat='{0} unité(s) disponible(s)'}" FontSize="13" FontAttributes="Bold" TextColor="{StaticResource StockMuted}" />
+                                    <Label Grid.Column="1" Text="{Binding MinimumQuantity, StringFormat='Seuil : {0}'}" FontSize="12" TextColor="{StaticResource StockMuted}" />
+                                </Grid>
+                                <Label Text="Réapprovisionnez cet article pour éviter une rupture de stock."
+                                       FontSize="12" TextColor="{StaticResource StockMuted}" />
+                                <Button Text="Voir la fiche article" BackgroundColor="White" BorderColor="{StaticResource StockBorder}"
+                                        BorderWidth="1" TextColor="{StaticResource StockNavy}" FontAttributes="Bold" CornerRadius="10" HeightRequest="46"
+                                        Clicked="OnProductSelected" />
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <Border BackgroundColor="{StaticResource StockLightBlue}" StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12">
+                    <HorizontalStackLayout Spacing="9">
+                        <Image Source="lucide_info.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
+                        <Label Text="Les alertes disparaissent automatiquement lorsque le stock repasse au-dessus du seuil."
+                               FontSize="12" TextColor="{StaticResource StockNavy}" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Border>
+                <Label Text="{Binding Message}" IsVisible="{Binding HasMessage}" FontSize="13" TextColor="{StaticResource StockRed}" />
+                <Label Text="Aucune alerte de stock pour le moment." IsVisible="{Binding HasNoAlerts}" FontSize="13"
+                       TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+        </ScrollView>
+        <views:StockTabBar Grid.Row="1" SelectedTab="Home" NavigateCommand="{Binding NavigateTabCommand}" />
+    </Grid>
+</ContentPage>

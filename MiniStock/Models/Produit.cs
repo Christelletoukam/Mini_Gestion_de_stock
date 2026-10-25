@@ -22,6 +22,9 @@ public sealed class Produit
 
     public bool EstActif { get; set; } = true;
 
+    // Nom du fichier photo, par exemple "cafe_moulu.png"
+    public string? ImagePath { get; set; }
+
     [NotMapped]
     public EtatStock NiveauStock =>
         QuantiteDisponible == 0

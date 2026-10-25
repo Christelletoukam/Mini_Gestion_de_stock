@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:MiniStock.Views"
+             x:Class="MiniStock.Views.StockTabBar"
+             x:DataType="views:StockTabBar"
+             x:Name="Root"
+             HeightRequest="70"
+             BackgroundColor="White">
+    <Grid RowDefinitions="1,*"
+          ColumnDefinitions="*,*,*,*,*"
+          Padding="4,0,4,4"
+          BindingContext="{x:Reference Root}">
+        <BoxView Grid.ColumnSpan="5" HeightRequest="1" Color="{StaticResource StockBorder}" VerticalOptions="Start" />
+        <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="0" HorizontalOptions="Center" VerticalOptions="Center">
+            <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="Home" /></VerticalStackLayout.GestureRecognizers>
+            <Image Source="lucide_house.png" WidthRequest="24" HeightRequest="24" Opacity="0.55" HorizontalOptions="Center">
+                <Image.Triggers><DataTrigger TargetType="Image" Binding="{Binding SelectedTab}" Value="Home"><Setter Property="Opacity" Value="1" /></DataTrigger></Image.Triggers>
+            </Image>
+            <Label Text="Accueil" FontSize="10" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center">
+                <Label.Triggers><DataTrigger TargetType="Label" Binding="{Binding SelectedTab}" Value="Home"><Setter Property="TextColor" Value="{StaticResource StockNavy}" /><Setter Property="FontAttributes" Value="Bold" /></DataTrigger></Label.Triggers>
+            </Label>
+            <BoxView HeightRequest="3" WidthRequest="18" Color="{StaticResource StockOrange}" IsVisible="False" HorizontalOptions="Center" Margin="0,2,0,0">
+                <BoxView.Triggers><DataTrigger TargetType="BoxView" Binding="{Binding SelectedTab}" Value="Home"><Setter Property="IsVisible" Value="True" /></DataTrigger></BoxView.Triggers>
+            </BoxView>
+        </VerticalStackLayout>
+        <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="0" HorizontalOptions="Center" VerticalOptions="Center">
+            <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="Articles" /></VerticalStackLayout.GestureRecognizers>
+            <Image Source="lucide_package.png" WidthRequest="24" HeightRequest="24" Opacity="0.55" HorizontalOptions="Center">
+                <Image.Triggers><DataTrigger TargetType="Image" Binding="{Binding SelectedTab}" Value="Articles"><Setter Property="Opacity" Value="1" /></DataTrigger></Image.Triggers>
+            </Image>
+            <Label Text="Articles" FontSize="10" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center">
+                <Label.Triggers><DataTrigger TargetType="Label" Binding="{Binding SelectedTab}" Value="Articles"><Setter Property="TextColor" Value="{StaticResource StockNavy}" /><Setter Property="FontAttributes" Value="Bold" /></DataTrigger></Label.Triggers>
+            </Label>
+            <BoxView HeightRequest="3" WidthRequest="18" Color="{StaticResource StockOrange}" IsVisible="False" HorizontalOptions="Center" Margin="0,2,0,0">
+                <BoxView.Triggers><DataTrigger TargetType="BoxView" Binding="{Binding SelectedTab}" Value="Articles"><Setter Property="IsVisible" Value="True" /></DataTrigger></BoxView.Triggers>
+            </BoxView>
+        </VerticalStackLayout>
+        <VerticalStackLayout Grid.Row="1" Grid.Column="2" Spacing="0" HorizontalOptions="Center" VerticalOptions="Center">
+            <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="Mouvements" /></VerticalStackLayout.GestureRecognizers>
+            <Image Source="lucide_arrow_left_right.png" WidthRequest="24" HeightRequest="24" Opacity="0.55" HorizontalOptions="Center">
+                <Image.Triggers><DataTrigger TargetType="Image" Binding="{Binding SelectedTab}" Value="Mouvements"><Setter Property="Opacity" Value="1" /></DataTrigger></Image.Triggers>
+            </Image>
+            <Label Text="Mouvements" FontSize="10" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center">
+                <Label.Triggers><DataTrigger TargetType="Label" Binding="{Binding SelectedTab}" Value="Mouvements"><Setter Property="TextColor" Value="{StaticResource StockNavy}" /><Setter Property="FontAttributes" Value="Bold" /></DataTrigger></Label.Triggers>
+            </Label>
+            <BoxView HeightRequest="3" WidthRequest="18" Color="{StaticResource StockOrange}" IsVisible="False" HorizontalOptions="Center" Margin="0,2,0,0">
+                <BoxView.Triggers><DataTrigger TargetType="BoxView" Binding="{Binding SelectedTab}" Value="Mouvements"><Setter Property="IsVisible" Value="True" /></DataTrigger></BoxView.Triggers>
+            </BoxView>
+        </VerticalStackLayout>
+        <VerticalStackLayout Grid.Row="1" Grid.Column="3" Spacing="0" HorizontalOptions="Center" VerticalOptions="Center">
+            <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="Inventaire" /></VerticalStackLayout.GestureRecognizers>
+            <Image Source="lucide_clipboard_check.png" WidthRequest="24" HeightRequest="24" Opacity="0.55" HorizontalOptions="Center">
+                <Image.Triggers><DataTrigger TargetType="Image" Binding="{Binding SelectedTab}" Value="Inventaire"><Setter Property="Opacity" Value="1" /></DataTrigger></Image.Triggers>
+            </Image>
+            <Label Text="Inventaire" FontSize="10" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center">
+                <Label.Triggers><DataTrigger TargetType="Label" Binding="{Binding SelectedTab}" Value="Inventaire"><Setter Property="TextColor" Value="{StaticResource StockNavy}" /><Setter Property="FontAttributes" Value="Bold" /></DataTrigger></Label.Triggers>
+            </Label>
+            <BoxView HeightRequest="3" WidthRequest="18" Color="{StaticResource StockOrange}" IsVisible="False" HorizontalOptions="Center" Margin="0,2,0,0">
+                <BoxView.Triggers><DataTrigger TargetType="BoxView" Binding="{Binding SelectedTab}" Value="Inventaire"><Setter Property="IsVisible" Value="True" /></DataTrigger></BoxView.Triggers>
+            </BoxView>
+        </VerticalStackLayout>
+        <VerticalStackLayout Grid.Row="1" Grid.Column="4" Spacing="0" HorizontalOptions="Center" VerticalOptions="Center">
+            <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="Réglages" /></VerticalStackLayout.GestureRecognizers>
+            <Image Source="lucide_settings.png" WidthRequest="24" HeightRequest="24" Opacity="0.55" HorizontalOptions="Center">
+                <Image.Triggers><DataTrigger TargetType="Image" Binding="{Binding SelectedTab}" Value="Réglages"><Setter Property="Opacity" Value="1" /></DataTrigger></Image.Triggers>
+            </Image>
+            <Label Text="Réglages" FontSize="10" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center">
+                <Label.Triggers><DataTrigger TargetType="Label" Binding="{Binding SelectedTab}" Value="Réglages"><Setter Property="TextColor" Value="{StaticResource StockNavy}" /><Setter Property="FontAttributes" Value="Bold" /></DataTrigger></Label.Triggers>
+            </Label>
+            <BoxView HeightRequest="3" WidthRequest="18" Color="{StaticResource StockOrange}" IsVisible="False" HorizontalOptions="Center" Margin="0,2,0,0">
+                <BoxView.Triggers><DataTrigger TargetType="BoxView" Binding="{Binding SelectedTab}" Value="Réglages"><Setter Property="IsVisible" Value="True" /></DataTrigger></BoxView.Triggers>
+            </BoxView>
+        </VerticalStackLayout>
+    </Grid>
+</ContentView>

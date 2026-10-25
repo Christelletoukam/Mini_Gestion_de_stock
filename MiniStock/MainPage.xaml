@@ -2,13 +2,15 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MiniStock.ViewModels"
+             xmlns:views="clr-namespace:MiniStock.Views"
              x:Class="MiniStock.MainPage"
              x:DataType="vm:MainPageViewModel"
              Title="Tableau de bord"
+             NavigationPage.HasNavigationBar="False"
              BackgroundColor="{StaticResource StockBackground}">
     <Grid RowDefinitions="*,Auto">
         <ScrollView Grid.Row="0">
-            <VerticalStackLayout Padding="22,18,22,24" Spacing="18">
+            <VerticalStackLayout Padding="18,12,18,16" Spacing="14">
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                     <VerticalStackLayout Spacing="4">
                         <Label Text="Tableau de bord"
@@ -19,17 +21,15 @@
                                FontSize="13"
                                TextColor="{StaticResource StockMuted}" />
                     </VerticalStackLayout>
-                    <Label Grid.Column="1"
-                           Text="♧"
-                           FontSize="27"
-                           TextColor="{StaticResource StockNavy}"
-                           VerticalOptions="Start"
-                           Margin="0,2,3,0" />
+                    <ImageButton Grid.Column="1" Source="lucide_bell.png"
+                                 Command="{Binding AlertsCommand}" WidthRequest="44" HeightRequest="44"
+                                 Padding="10" BackgroundColor="Transparent" VerticalOptions="Center"
+                                 SemanticProperties.Description="Voir les alertes" />
                 </Grid>
 
                 <VerticalStackLayout Spacing="3">
-                    <Label Text="Bonjour, Gérant !"
-                           FontSize="18"
+                    <Label Text="{Binding NomUtilisateur, StringFormat='Bonjour, {0} !'}"
+                           FontSize="17"
                            FontAttributes="Bold"
                            TextColor="#263F50" />
                     <Label Text="Voici un aperçu de votre stock aujourd’hui"
@@ -37,32 +37,37 @@
                            TextColor="{StaticResource StockMuted}" />
                 </VerticalStackLayout>
 
+                <Label Text="{Binding Message}"
+                       IsVisible="{Binding AfficherMessage}"
+                       FontSize="13"
+                       TextColor="{StaticResource StockRed}" />
+
                 <Grid ColumnDefinitions="*,*,*,*"
                       ColumnSpacing="7">
                     <Border Grid.Column="0" Style="{StaticResource DashboardMetricCard}">
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="▣" FontSize="19" TextColor="{StaticResource StockNavy}" />
+                            <Image Source="lucide_package.png" WidthRequest="21" HeightRequest="21" />
                             <Label Text="{Binding TotalArticles}" Style="{StaticResource DashboardMetricValue}" />
                             <Label Text="Articles" Style="{StaticResource DashboardMetricCaption}" />
                         </VerticalStackLayout>
                     </Border>
                     <Border Grid.Column="1" Style="{StaticResource DashboardMetricCard}">
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="↙" FontSize="21" TextColor="{StaticResource StockGreen}" />
+                            <Image Source="lucide_arrow_down_left.png" WidthRequest="21" HeightRequest="21" />
                             <Label Text="{Binding TotalEntrees}" Style="{StaticResource DashboardMetricValue}" />
                             <Label Text="Entrées" Style="{StaticResource DashboardMetricCaption}" />
                         </VerticalStackLayout>
                     </Border>
                     <Border Grid.Column="2" Style="{StaticResource DashboardMetricCard}">
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="↗" FontSize="21" TextColor="{StaticResource StockRed}" />
+                            <Image Source="lucide_arrow_up_right.png" WidthRequest="21" HeightRequest="21" />
                             <Label Text="{Binding TotalSorties}" Style="{StaticResource DashboardMetricValue}" />
                             <Label Text="Sorties" Style="{StaticResource DashboardMetricCaption}" />
                         </VerticalStackLayout>
                     </Border>
                     <Border Grid.Column="3" Style="{StaticResource DashboardMetricCard}">
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="⚠" FontSize="20" TextColor="{StaticResource StockYellow}" />
+                            <Image Source="lucide_triangle_alert.png" WidthRequest="21" HeightRequest="21" />
                             <Label Text="{Binding NombreAlertes}" Style="{StaticResource DashboardMetricValue}" />
                             <Label Text="Alertes" Style="{StaticResource DashboardMetricCaption}" />
                         </VerticalStackLayout>
@@ -83,11 +88,8 @@
                                    FontAttributes="Bold"
                                    TextColor="{StaticResource StockNavy}" />
                         </VerticalStackLayout>
-                        <Label Grid.Column="1"
-                               Text="▱"
-                               FontSize="30"
-                               TextColor="{StaticResource StockNavy}"
-                               VerticalOptions="Center" />
+                        <Image Grid.Column="1" Source="lucide_wallet.png"
+                               WidthRequest="28" HeightRequest="28" VerticalOptions="Center" />
                     </Grid>
                 </Border>
 
@@ -101,7 +103,11 @@
                            FontSize="12"
                            FontAttributes="Bold"
                            TextColor="{StaticResource StockNavy}"
-                           VerticalOptions="Center" />
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AlertsCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
                 </Grid>
 
                 <Border Stroke="{StaticResource StockBorder}"
@@ -131,11 +137,8 @@
                                                    TextColor="{Binding Couleur}" />
                                         </HorizontalStackLayout>
                                     </VerticalStackLayout>
-                                    <Label Grid.Column="1"
-                                           Text="›"
-                                           FontSize="25"
-                                           TextColor="{StaticResource StockNavy}"
-                                           VerticalOptions="Center" />
+                                    <Image Grid.Column="1" Source="lucide_chevron_right.png"
+                                           WidthRequest="21" HeightRequest="21" VerticalOptions="Center" />
                                 </Grid>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
@@ -149,14 +152,20 @@
 
                 <Grid ColumnDefinitions="*,*">
                     <VerticalStackLayout HorizontalOptions="Center" Spacing="5">
-                        <Label Text="↔" FontSize="27" TextColor="{StaticResource StockNavy}" HorizontalTextAlignment="Center" />
+                        <VerticalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding MovementsCommand}" />
+                        </VerticalStackLayout.GestureRecognizers>
+                        <Image Source="lucide_arrow_left_right.png" WidthRequest="27" HeightRequest="27" HorizontalOptions="Center" />
                         <Label Text="Entrée / Sortie"
                                FontSize="13"
                                FontAttributes="Bold"
                                TextColor="{StaticResource StockNavy}" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="5">
-                        <Label Text="▣" FontSize="25" TextColor="{StaticResource StockNavy}" HorizontalTextAlignment="Center" />
+                        <VerticalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding InventoryCommand}" />
+                        </VerticalStackLayout.GestureRecognizers>
+                        <Image Source="lucide_clipboard_check.png" WidthRequest="25" HeightRequest="25" HorizontalOptions="Center" />
                         <Label Text="Faire l’inventaire"
                                FontSize="13"
                                FontAttributes="Bold"
@@ -169,11 +178,9 @@
                         StrokeShape="RoundRectangle 12"
                         Padding="12">
                     <HorizontalStackLayout Spacing="10">
-                        <Label Text="⛨"
-                               FontSize="18"
-                               TextColor="#987112"
-                               VerticalOptions="Center" />
-                        <Label Text="2 articles demandent votre attention. Réapprovisionnez-les pour éviter les ruptures."
+                        <Image Source="lucide_shield_alert.png"
+                               WidthRequest="21" HeightRequest="21" VerticalOptions="Center" />
+                        <Label Text="{Binding NombreAlertes, StringFormat='{0} article(s) demandent votre attention. Réapprovisionnez-les pour éviter les ruptures.'}"
                                FontSize="12"
                                TextColor="#987112"
                                VerticalOptions="Center" />
@@ -182,38 +189,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <Grid Grid.Row="1"
-              ColumnDefinitions="*,*,*,*,*"
-              HeightRequest="72"
-              Padding="7,7,7,4"
-              BackgroundColor="White">
-            <BoxView HeightRequest="1"
-                     Color="{StaticResource StockBorder}"
-                     VerticalOptions="Start"
-                     HorizontalOptions="Fill"
-                     Grid.ColumnSpan="5" />
-            <VerticalStackLayout Grid.Column="0" Spacing="1" HorizontalOptions="Center" VerticalOptions="Center">
-                <Label Text="⌂" FontSize="23" TextColor="{StaticResource StockNavy}" HorizontalTextAlignment="Center" />
-                <Label Text="Accueil" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource StockNavy}" />
-                <BoxView HeightRequest="3" WidthRequest="18" Color="{StaticResource StockOrange}" HorizontalOptions="Center" Margin="0,2,0,0" />
-            </VerticalStackLayout>
-            <VerticalStackLayout Grid.Column="1" Spacing="1" HorizontalOptions="Center" VerticalOptions="Center">
-                <Label Text="▣" FontSize="21" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center" />
-                <Label Text="Articles" FontSize="10" TextColor="{StaticResource StockMuted}" />
-            </VerticalStackLayout>
-            <VerticalStackLayout Grid.Column="2" Spacing="1" HorizontalOptions="Center" VerticalOptions="Center">
-                <Label Text="↔" FontSize="23" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center" />
-                <Label Text="Mouvements" FontSize="10" TextColor="{StaticResource StockMuted}" />
-            </VerticalStackLayout>
-            <VerticalStackLayout Grid.Column="3" Spacing="1" HorizontalOptions="Center" VerticalOptions="Center">
-                <Label Text="☑" FontSize="21" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center" />
-                <Label Text="Inventaire" FontSize="10" TextColor="{StaticResource StockMuted}" />
-            </VerticalStackLayout>
-            <VerticalStackLayout Grid.Column="4" Spacing="1" HorizontalOptions="Center" VerticalOptions="Center">
-                <Label Text="⚙" FontSize="21" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center" />
-                <Label Text="Réglages" FontSize="10" TextColor="{StaticResource StockMuted}" />
-            </VerticalStackLayout>
-        </Grid>
+        <views:StockTabBar Grid.Row="1" SelectedTab="Home" NavigateCommand="{Binding NavigateTabCommand}" />
     </Grid>
     <ContentPage.Resources>
         <Style x:Key="DashboardMetricCard" TargetType="Border">
@@ -221,7 +197,7 @@
             <Setter Property="StrokeThickness" Value="1" />
             <Setter Property="StrokeShape" Value="RoundRectangle 17" />
             <Setter Property="Padding" Value="10,9" />
-            <Setter Property="HeightRequest" Value="112" />
+            <Setter Property="HeightRequest" Value="102" />
         </Style>
         <Style x:Key="DashboardMetricValue" TargetType="Label">
             <Setter Property="FontSize" Value="26" />

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MiniStock.ViewModels"
+             xmlns:data="clr-namespace:MiniStock.Services"
+             xmlns:views="clr-namespace:MiniStock.Views"
+             x:Class="MiniStock.Views.ProductDetailsPage"
+             x:DataType="vm:ProductDetailsViewModel"
+             Title="Détail d'un article"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{StaticResource StockBackground}">
+    <Grid RowDefinitions="*,Auto,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="18,12,18,14" Spacing="14">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <ImageButton Source="lucide_arrow_left.png" Command="{Binding BackCommand}" WidthRequest="44" HeightRequest="44" Padding="11" BackgroundColor="Transparent" VerticalOptions="Center" />
+                    <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                        <Label Text="Détail d’un article" FontSize="23" FontAttributes="Bold" TextColor="{StaticResource StockNavy}" />
+                        <Label Text="Détails et suivi du stock" FontSize="12" TextColor="{StaticResource StockMuted}" />
+                    </VerticalStackLayout>
+                    <ImageButton Grid.Column="2" Source="lucide_pencil.png" Command="{Binding EditCommand}" WidthRequest="44" HeightRequest="44" Padding="11" BackgroundColor="Transparent" VerticalOptions="Center" />
+                </Grid>
+
+                <Border StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="12" BackgroundColor="White" Margin="0,7,0,0">
+                    <Grid ColumnDefinitions="64,*" ColumnSpacing="12">
+                        <Border WidthRequest="60" HeightRequest="66" StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#F2F5F7" VerticalOptions="Center">
+                            <Grid>
+                                <!-- Icône de boîte : visible seulement si l'article n'a pas de photo -->
+                                <Image Source="lucide_package.png" WidthRequest="25" HeightRequest="25" HorizontalOptions="Center" VerticalOptions="Center" />
+                                <!-- Photo de l'article : recouvre l'icône quand elle existe -->
+                                <Image Source="{Binding Product.ImagePath}" Aspect="AspectFill" WidthRequest="60" HeightRequest="66" />
+                            </Grid>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                            <Label Text="{Binding Product.Name}" FontSize="14" FontAttributes="Bold" TextColor="#263F50" />
+                            <Label Text="{Binding Product.Category, StringFormat='Catégorie : {0}'}" FontSize="12" TextColor="{StaticResource StockMuted}" />
+                            <Label Text="{Binding Product.StockStatus}" FontSize="11" FontAttributes="Bold" TextColor="{Binding Product.StockStatusColor}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <Grid ColumnDefinitions="*,*" Margin="0,2,0,0">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Informations" FontSize="12" FontAttributes="Bold" TextColor="{StaticResource StockNavy}" HorizontalTextAlignment="Center">
+                            <Label.GestureRecognizers><TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="Informations" /></Label.GestureRecognizers>
+                        </Label>
+                        <BoxView HeightRequest="2" Color="{StaticResource StockBorder}">
+                            <BoxView.Triggers><DataTrigger TargetType="BoxView" Binding="{Binding SelectedTab}" Value="Informations"><Setter Property="Color" Value="{StaticResource StockNavy}" /></DataTrigger></BoxView.Triggers>
+                        </BoxView>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1" Spacing="8">
+                        <Label Text="Historique" FontSize="12" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center">
+                            <Label.GestureRecognizers><TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="Historique" /></Label.GestureRecognizers>
+                            <Label.Triggers><DataTrigger TargetType="Label" Binding="{Binding SelectedTab}" Value="Historique"><Setter Property="TextColor" Value="{StaticResource StockNavy}" /><Setter Property="FontAttributes" Value="Bold" /></DataTrigger></Label.Triggers>
+                        </Label>
+                        <BoxView HeightRequest="2" Color="Transparent">
+                            <BoxView.Triggers><DataTrigger TargetType="BoxView" Binding="{Binding SelectedTab}" Value="Historique"><Setter Property="Color" Value="{StaticResource StockNavy}" /></DataTrigger></BoxView.Triggers>
+                        </BoxView>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <VerticalStackLayout IsVisible="{Binding IsShowingInformation}" Spacing="0">
+                    <Border Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 10" Padding="12">
+                        <VerticalStackLayout Spacing="3">
+                            <Label Text="Stock actuel" FontSize="11" TextColor="{StaticResource StockMuted}" />
+                            <Label Text="{Binding Product.Quantity, StringFormat='{0} unité(s)'}" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource StockMuted}" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 10" Padding="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Seuil d’alerte" FontSize="11" TextColor="{StaticResource StockMuted}" />
+                                <Label Text="{Binding Product.MinimumQuantity, StringFormat='{0} unité(s)'}" FontSize="13" FontAttributes="Bold" TextColor="#263F50" />
+                            </VerticalStackLayout>
+                            <ImageButton Grid.Column="1" Source="lucide_pencil.png" Command="{Binding EditCommand}"
+                                         WidthRequest="44" HeightRequest="44" Padding="12" BackgroundColor="Transparent"
+                                         VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                    <Border Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 10" Padding="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Prix unitaire" FontSize="11" TextColor="{StaticResource StockMuted}" />
+                            <Label Grid.Column="1" Text="{Binding Product.UnitPrice, StringFormat='{0:N0} FCFA'}" FontSize="13" FontAttributes="Bold" TextColor="#263F50" />
+                        </Grid>
+                    </Border>
+                    <Border IsVisible="{Binding IsEditing}" Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 12" Padding="12" Margin="0,9,0,0">
+                        <VerticalStackLayout Spacing="9">
+                            <Entry Text="{Binding MinimumQuantity}" Placeholder="Seuil d’alerte" Keyboard="Numeric" />
+                            <Entry Text="{Binding UnitPrice}" Placeholder="Prix unitaire (FCFA)" Keyboard="Numeric" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <VerticalStackLayout Spacing="5" Padding="12,12,0,0">
+                        <Label Text="Description" FontSize="12" FontAttributes="Bold" TextColor="{StaticResource StockNavy}" />
+                        <Label Text="{Binding Product.Name}" FontSize="12" TextColor="{StaticResource StockMuted}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout IsVisible="{Binding IsShowingHistory}" BindableLayout.ItemsSource="{Binding Movements}" Spacing="8">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="data:StockMovement">
+                            <Border Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 12" Padding="12">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <VerticalStackLayout Spacing="3">
+                                        <Label Text="{Binding TypeLabel}" FontSize="13" FontAttributes="Bold" TextColor="#263F50" />
+                                        <Label Text="{Binding CreatedAt, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontSize="11" TextColor="{StaticResource StockMuted}" />
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="1" Text="{Binding Variation, StringFormat='{0:+#;-#;0}'}" FontSize="16"
+                                           FontAttributes="Bold" TextColor="{StaticResource StockNavy}" VerticalOptions="Center" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                    <Label Text="Aucun mouvement pour cet article." IsVisible="{Binding HasNoMovements}"
+                           FontSize="13" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+                <Label Text="{Binding Message}" FontSize="13" TextColor="{StaticResource StockRed}" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Button Grid.Row="1" Text="Modifier l’article" Command="{Binding EditCommand}" IsVisible="{Binding IsNotEditing}"
+                BackgroundColor="{StaticResource StockOrange}" TextColor="White" FontAttributes="Bold"
+                CornerRadius="11" HeightRequest="52" Margin="18,8,18,10" />
+        <Button Grid.Row="1" Text="Enregistrer les modifications" Command="{Binding SaveCommand}" IsVisible="{Binding IsEditing}"
+                BackgroundColor="{StaticResource StockOrange}" TextColor="White" FontAttributes="Bold"
+                CornerRadius="11" HeightRequest="52" Margin="18,8,18,10" />
+        <views:StockTabBar Grid.Row="2" SelectedTab="Articles" NavigateCommand="{Binding NavigateTabCommand}" />
+    </Grid>
+</ContentPage>

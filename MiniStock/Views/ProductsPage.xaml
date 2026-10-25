@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MiniStock.ViewModels"
+             xmlns:data="clr-namespace:MiniStock.Services"
+             xmlns:views="clr-namespace:MiniStock.Views"
+             x:Class="MiniStock.Views.ProductsPage"
+             x:DataType="vm:ProductsViewModel"
+             Title="Articles"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{StaticResource StockBackground}">
+    <Grid RowDefinitions="*,Auto,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="18,12,18,14" Spacing="14">
+                <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                    <Label Text="Articles" FontSize="26" FontAttributes="Bold" TextColor="{StaticResource StockNavy}" VerticalOptions="Center" />
+                    <ImageButton Grid.Column="1" Source="lucide_plus.png"
+                                 Command="{Binding ToggleAddFormCommand}" WidthRequest="44" HeightRequest="44"
+                                 Padding="10" BackgroundColor="Transparent" VerticalOptions="Center"
+                                 SemanticProperties.Description="Ajouter un article" />
+                </Grid>
+
+                <Border Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 12" Padding="13,2" HeightRequest="48">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Image Source="lucide_search.png" WidthRequest="22" HeightRequest="22" VerticalOptions="Center" />
+                        <Entry Grid.Column="1" Text="{Binding SearchText}" Placeholder="Rechercher un article..."
+                               FontSize="14" TextColor="#263F50" PlaceholderColor="{StaticResource StockMuted}"
+                               VerticalOptions="Center" ClearButtonVisibility="WhileEditing" />
+                    </Grid>
+                </Border>
+
+                <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                    <HorizontalStackLayout Spacing="7">
+                        <Border Padding="13,8" Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="White">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SelectFilterCommand}" CommandParameter="Tous" /></Border.GestureRecognizers>
+                            <Label Text="{Binding Products.Count, StringFormat='Tous ({0})'}" FontSize="12" TextColor="{StaticResource StockMuted}">
+                                <Label.Triggers><DataTrigger TargetType="Label" Binding="{Binding SelectedFilter}" Value="Tous"><Setter Property="TextColor" Value="White" /><Setter Property="FontAttributes" Value="Bold" /></DataTrigger></Label.Triggers>
+                            </Label>
+                            <Border.Triggers><DataTrigger TargetType="Border" Binding="{Binding SelectedFilter}" Value="Tous"><Setter Property="BackgroundColor" Value="{StaticResource StockNavy}" /><Setter Property="Stroke" Value="{StaticResource StockNavy}" /></DataTrigger></Border.Triggers>
+                        </Border>
+                        <Border Padding="13,8" Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="White">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SelectFilterCommand}" CommandParameter="En stock" /></Border.GestureRecognizers>
+                            <Label Text="{Binding AvailableCount, StringFormat='En stock ({0})'}" FontSize="12" TextColor="{StaticResource StockMuted}">
+                                <Label.Triggers><DataTrigger TargetType="Label" Binding="{Binding SelectedFilter}" Value="En stock"><Setter Property="TextColor" Value="White" /><Setter Property="FontAttributes" Value="Bold" /></DataTrigger></Label.Triggers>
+                            </Label>
+                            <Border.Triggers><DataTrigger TargetType="Border" Binding="{Binding SelectedFilter}" Value="En stock"><Setter Property="BackgroundColor" Value="{StaticResource StockNavy}" /><Setter Property="Stroke" Value="{StaticResource StockNavy}" /></DataTrigger></Border.Triggers>
+                        </Border>
+                        <Border Padding="13,8" Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="White">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SelectFilterCommand}" CommandParameter="Faible" /></Border.GestureRecognizers>
+                            <Label Text="{Binding LowStockCount, StringFormat='Faible ({0})'}" FontSize="12" TextColor="{StaticResource StockMuted}">
+                                <Label.Triggers><DataTrigger TargetType="Label" Binding="{Binding SelectedFilter}" Value="Faible"><Setter Property="TextColor" Value="White" /><Setter Property="FontAttributes" Value="Bold" /></DataTrigger></Label.Triggers>
+                            </Label>
+                            <Border.Triggers><DataTrigger TargetType="Border" Binding="{Binding SelectedFilter}" Value="Faible"><Setter Property="BackgroundColor" Value="{StaticResource StockNavy}" /><Setter Property="Stroke" Value="{StaticResource StockNavy}" /></DataTrigger></Border.Triggers>
+                        </Border>
+                        <Border Padding="13,8" Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="White">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SelectFilterCommand}" CommandParameter="Rupture" /></Border.GestureRecognizers>
+                            <Label Text="{Binding OutOfStockCount, StringFormat='Rupture ({0})'}" FontSize="12" TextColor="{StaticResource StockMuted}">
+                                <Label.Triggers><DataTrigger TargetType="Label" Binding="{Binding SelectedFilter}" Value="Rupture"><Setter Property="TextColor" Value="White" /><Setter Property="FontAttributes" Value="Bold" /></DataTrigger></Label.Triggers>
+                            </Label>
+                            <Border.Triggers><DataTrigger TargetType="Border" Binding="{Binding SelectedFilter}" Value="Rupture"><Setter Property="BackgroundColor" Value="{StaticResource StockNavy}" /><Setter Property="Stroke" Value="{StaticResource StockNavy}" /></DataTrigger></Border.Triggers>
+                        </Border>
+                    </HorizontalStackLayout>
+                </ScrollView>
+
+                <Label Text="{Binding Message}" IsVisible="{Binding HasMessage}" FontSize="12" TextColor="{StaticResource StockRed}" />
+                <Border IsVisible="{Binding ShowAddForm}" Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 14" Padding="14">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Ajouter un article" FontSize="17" FontAttributes="Bold" TextColor="{StaticResource StockNavy}" />
+                        <Entry Text="{Binding Name}" Placeholder="Nom de l’article" />
+                        <Entry Text="{Binding Category}" Placeholder="Catégorie (facultatif)" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                            <Entry Text="{Binding UnitPrice}" Placeholder="Prix (FCFA)" Keyboard="Numeric" />
+                            <Entry Grid.Column="1" Text="{Binding Quantity}" Placeholder="Quantité" Keyboard="Numeric" />
+                        </Grid>
+                        <Entry Text="{Binding MinimumQuantity}" Placeholder="Seuil d’alerte" Keyboard="Numeric" />
+                        <Label Text="{Binding Message}" TextColor="{StaticResource StockRed}" FontSize="13" />
+                        <Button Text="Enregistrer l’article" Command="{Binding AddCommand}" BackgroundColor="{StaticResource StockOrange}"
+                                TextColor="White" FontAttributes="Bold" CornerRadius="12" HeightRequest="50" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Grid ColumnDefinitions="*,Auto" Margin="0,2,0,0">
+                    <Label Text="Mon stock" FontSize="18" FontAttributes="Bold" TextColor="#263F50" />
+                    <Label Grid.Column="1" Text="{Binding FilteredProducts.Count, StringFormat='{0} article(s)'}" FontSize="12"
+                           TextColor="{StaticResource StockMuted}" VerticalOptions="Center" />
+                </Grid>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding FilteredProducts}" Spacing="8">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="data:StockProduct">
+                            <Border StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="12,10" BackgroundColor="{Binding CardBackground}">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnProductTapped" />
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="52,*,Auto" ColumnSpacing="10">
+                                    <Border Grid.Column="0" WidthRequest="46" HeightRequest="58" StrokeThickness="0" StrokeShape="RoundRectangle 8" BackgroundColor="#F2F5F7" VerticalOptions="Center">
+                                        <Grid>
+                                            <!-- Icône de boîte : visible seulement si l'article n'a pas de photo -->
+                                            <Image Source="lucide_package.png" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="Center" />
+                                            <!-- Photo de l'article : recouvre l'icône quand elle existe -->
+                                            <Image Source="{Binding ImagePath}" Aspect="AspectFill" WidthRequest="46" HeightRequest="58" />
+                                        </Grid>
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}" FontSize="14" FontAttributes="Bold" TextColor="#263F50" LineBreakMode="TailTruncation" />
+                                        <Label Text="{Binding Category, TargetNullValue='Articles'}" FontSize="11" TextColor="{StaticResource StockMuted}" />
+                                        <Label Text="{Binding StockStatus}" FontSize="11" FontAttributes="Bold" TextColor="{Binding StockStatusColor}" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="2" Spacing="1" VerticalOptions="Center" HorizontalOptions="End">
+                                        <Image Source="lucide_chevron_right.png" WidthRequest="20" HeightRequest="20" Opacity="0.55" HorizontalOptions="End" />
+                                        <Label Text="{Binding UnitPrice, StringFormat='{0:N0} FCFA'}" FontSize="10" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="End" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+                <Label Text="Aucun article pour ce filtre." IsVisible="{Binding HasNoProducts}" FontSize="13"
+                       TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center" Margin="0,10" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Button Grid.Row="1" Text="Ajouter un article" Command="{Binding ToggleAddFormCommand}"
+                BackgroundColor="{StaticResource StockOrange}" TextColor="White" FontAttributes="Bold"
+                CornerRadius="11" HeightRequest="52" Margin="18,8,18,10" />
+        <views:StockTabBar Grid.Row="2" SelectedTab="Articles" NavigateCommand="{Binding NavigateTabCommand}" />
+    </Grid>
+</ContentPage>

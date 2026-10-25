@@ -28,6 +28,10 @@ public sealed class LoginViewModel : ViewModelBase
         {
             Email = Preferences.Get("last_registered_email", string.Empty) ?? string.Empty;
         }
+        else
+        {
+            Email = "demo@ministock.fr";
+        }
 
         SubmitCommand = new Command(async () => await LoginAsync(), () => !IsBusy);
         RegisterCommand = new Command(async () => await _navigationService.PushAsync<RegisterPage>());
@@ -67,8 +71,17 @@ public sealed class LoginViewModel : ViewModelBase
     public bool IsPasswordHidden
     {
         get => _isPasswordHidden;
-        set => SetProperty(ref _isPasswordHidden, value);
+        set
+        {
+            if (SetProperty(ref _isPasswordHidden, value))
+            {
+                OnPropertyChanged(nameof(PasswordVisibilityIcon));
+            }
+        }
     }
+
+    public string PasswordVisibilityIcon =>
+        IsPasswordHidden ? "lucide_eye.png" : "lucide_eye_off.png";
 
     public bool IsBusy
     {

@@ -12,10 +12,10 @@
     <Color x:Key="Secondary">#FF914D</Color>
     <Color x:Key="SecondaryDarkText">#C76622</Color>
     <Color x:Key="Tertiary">#E8F4FB</Color>
-    <Color x:Key="StockNavy">#164B73</Color>
+    <Color x:Key="StockNavy">#174E75</Color>
     <Color x:Key="StockOrange">#FF914D</Color>
-    <Color x:Key="StockMuted">#7D8E9C</Color>
-    <Color x:Key="StockBorder">#E3E9ED</Color>
+    <Color x:Key="StockMuted">#7C8D9B</Color>
+    <Color x:Key="StockBorder">#DFE8EE</Color>
     <Color x:Key="StockBackground">#FFFFFF</Color>
     <Color x:Key="StockGreen">#35A65A</Color>
     <Color x:Key="StockRed">#D9534F</Color>

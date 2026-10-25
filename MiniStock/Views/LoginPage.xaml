@@ -5,6 +5,7 @@
              x:Class="MiniStock.Views.LoginPage"
              x:DataType="vm:LoginViewModel"
              Title="Connexion"
+             NavigationPage.HasNavigationBar="False"
              BackgroundColor="{StaticResource StockBackground}">
     <ScrollView>
         <VerticalStackLayout Padding="24,12,24,20" Spacing="14">
@@ -41,9 +42,9 @@
                     HeightRequest="62"
                     Padding="14,4">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="13">
-                    <Label Text="✉"
-                           FontSize="22"
-                           TextColor="{StaticResource StockNavy}"
+                    <Image Source="lucide_mail.png"
+                           WidthRequest="22"
+                           HeightRequest="22"
                            VerticalOptions="Center" />
                     <Entry Grid.Column="1"
                            Text="{Binding Email}"
@@ -63,9 +64,9 @@
                     HeightRequest="62"
                     Padding="14,4">
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="13">
-                    <Label Text="♙"
-                           FontSize="22"
-                           TextColor="{StaticResource StockNavy}"
+                    <Image Source="lucide_lock_keyhole.png"
+                           WidthRequest="22"
+                           HeightRequest="22"
                            VerticalOptions="Center" />
                     <Entry Grid.Column="1"
                            Text="{Binding MotDePasse}"
@@ -75,15 +76,15 @@
                            TextColor="#273F50"
                            PlaceholderColor="{StaticResource StockMuted}"
                            VerticalOptions="Center" />
-                    <Label Grid.Column="2"
-                           Text="◉"
-                           FontSize="19"
-                           TextColor="{StaticResource StockMuted}"
-                           VerticalOptions="Center">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding TogglePasswordCommand}" />
-                        </Label.GestureRecognizers>
-                    </Label>
+                    <ImageButton Grid.Column="2"
+                                 Source="{Binding PasswordVisibilityIcon}"
+                                 Command="{Binding TogglePasswordCommand}"
+                                 WidthRequest="44"
+                                 HeightRequest="44"
+                                 Padding="11"
+                                 BackgroundColor="Transparent"
+                                 VerticalOptions="Center"
+                                 SemanticProperties.Description="Afficher ou masquer le mot de passe" />
                 </Grid>
             </Border>
 
@@ -99,7 +100,7 @@
                    TextColor="{Binding MessageColor}"
                    FontSize="13" />
 
-            <Button Text="➜  Se connecter"
+            <Button Text="Se connecter"
                     Command="{Binding SubmitCommand}"
                     BackgroundColor="{StaticResource StockOrange}"
                     TextColor="White"

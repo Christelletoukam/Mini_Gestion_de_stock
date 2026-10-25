@@ -11,6 +11,24 @@ public sealed class AuthenticationService(StockDatabase database) : IAuthenticat
     private const int SaltLength = 16;
     private const int HashLength = 32;
 
+    public static string HashPassword(string password)
+    {
+        var salt = RandomNumberGenerator.GetBytes(SaltLength);
+        var hash = Rfc2898DeriveBytes.Pbkdf2(
+            password,
+            salt,
+            PasswordIterations,
+            HashAlgorithmName.SHA256,
+            HashLength);
+
+        return string.Join(
+            '$',
+            "pbkdf2-sha256",
+            PasswordIterations.ToString(CultureInfo.InvariantCulture),
+            Convert.ToBase64String(salt),
+            Convert.ToBase64String(hash));
+    }
+
     public async Task<AuthResult> RegisterAsync(
         string nom,
         string nomBoutique,
@@ -114,24 +132,6 @@ public sealed class AuthenticationService(StockDatabase database) : IAuthenticat
         }
 
         return new AuthResult(true, "Connexion réussie.", parsedUtilisateurId);
-    }
-
-    private static string HashPassword(string password)
-    {
-        var salt = RandomNumberGenerator.GetBytes(SaltLength);
-        var hash = Rfc2898DeriveBytes.Pbkdf2(
-            password,
-            salt,
-            PasswordIterations,
-            HashAlgorithmName.SHA256,
-            HashLength);
-
-        return string.Join(
-            '$',
-            "pbkdf2-sha256",
-            PasswordIterations.ToString(CultureInfo.InvariantCulture),
-            Convert.ToBase64String(salt),
-            Convert.ToBase64String(hash));
     }
 
     private static bool VerifyPassword(string password, string storedHash)

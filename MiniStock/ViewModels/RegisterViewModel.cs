@@ -92,14 +92,32 @@ public sealed class RegisterViewModel : ViewModelBase
     public bool IsPasswordHidden
     {
         get => _isPasswordHidden;
-        set => SetProperty(ref _isPasswordHidden, value);
+        set
+        {
+            if (SetProperty(ref _isPasswordHidden, value))
+            {
+                OnPropertyChanged(nameof(PasswordVisibilityIcon));
+            }
+        }
     }
 
     public bool IsConfirmationHidden
     {
         get => _isConfirmationHidden;
-        set => SetProperty(ref _isConfirmationHidden, value);
+        set
+        {
+            if (SetProperty(ref _isConfirmationHidden, value))
+            {
+                OnPropertyChanged(nameof(ConfirmationVisibilityIcon));
+            }
+        }
     }
+
+    public string PasswordVisibilityIcon =>
+        IsPasswordHidden ? "lucide_eye.png" : "lucide_eye_off.png";
+
+    public string ConfirmationVisibilityIcon =>
+        IsConfirmationHidden ? "lucide_eye.png" : "lucide_eye_off.png";
 
     public bool IsComplete
     {

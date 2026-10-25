@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MiniStock.ViewModels"
+             xmlns:views="clr-namespace:MiniStock.Views"
+             xmlns:controls="clr-namespace:MiniStock.Controls"
+             x:Class="MiniStock.Views.InventoryPage"
+             x:DataType="vm:InventoryViewModel"
+             Title="Inventaire"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{StaticResource StockBackground}">
+    <Grid RowDefinitions="*,Auto,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="18,12,18,14" Spacing="13">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <ImageButton Source="lucide_arrow_left.png" Command="{Binding BackCommand}" WidthRequest="44" HeightRequest="44" Padding="11" BackgroundColor="Transparent" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="Inventaire" FontSize="25" FontAttributes="Bold" TextColor="{StaticResource StockNavy}" VerticalOptions="Center" />
+                </Grid>
+
+                <Label Text="{Binding InventoryDate, StringFormat='Dernière mise à jour : {0}'}"
+                       FontSize="13" TextColor="{StaticResource StockMuted}" Margin="0,8,0,0" />
+                <Border Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 12" Padding="12,2" HeightRequest="48">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <controls:LucideIcon Icon="search" IconColor="{StaticResource StockNavy}" WidthRequest="22" HeightRequest="22" VerticalOptions="Center" />
+                        <Entry Grid.Column="1" Text="{Binding SearchText}" Placeholder="Rechercher un article..."
+                               FontSize="14" TextColor="#263F50" PlaceholderColor="{StaticResource StockMuted}"
+                               VerticalOptions="Center" ClearButtonVisibility="WhileEditing" />
+                    </Grid>
+                </Border>
+
+                <Border StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="12" BackgroundColor="White">
+                    <VerticalStackLayout Spacing="7">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="{Binding CompletionText}" FontSize="13" FontAttributes="Bold" TextColor="#263F50" />
+                            <Label Grid.Column="1" Text="{Binding CompletionPercent, StringFormat='{0} %'}" FontSize="13" TextColor="{StaticResource StockNavy}" />
+                        </Grid>
+                        <ProgressBar Progress="{Binding CompletionProgress}" ProgressColor="{StaticResource StockGreen}" />
+                        <Label Text="{Binding RemainingText}" FontSize="11" TextColor="{StaticResource StockMuted}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Grid ColumnDefinitions="*,48,54,44" Padding="4,0" ColumnSpacing="5">
+                    <Label Text="ARTICLE" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource StockMuted}" />
+                    <Label Grid.Column="1" Text="STOCK" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center" />
+                    <Label Grid.Column="2" Text="RÉEL" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center" />
+                    <Label Grid.Column="3" Text="ÉCART" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource StockMuted}" HorizontalTextAlignment="Center" />
+                </Grid>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding FilteredProducts}" Spacing="7">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:InventoryLineViewModel">
+                            <Border Stroke="{StaticResource StockBorder}" StrokeThickness="1" StrokeShape="RoundRectangle 11" Padding="9,8" BackgroundColor="{Binding RowBackground}">
+                                <Grid ColumnDefinitions="*,48,54,44" ColumnSpacing="5">
+                                    <Label Text="{Binding Name}" FontSize="12" FontAttributes="Bold" TextColor="#263F50" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+                                    <Label Grid.Column="1" Text="{Binding ExpectedQuantity}" FontSize="13" TextColor="#263F50" HorizontalTextAlignment="Center" VerticalOptions="Center" />
+                                    <Entry Grid.Column="2" Text="{Binding PhysicalQuantity}" Keyboard="Numeric" FontSize="13" FontAttributes="Bold"
+                                           HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HeightRequest="38" MinimumHeightRequest="38"
+                                           BackgroundColor="White" />
+                                    <Label Grid.Column="3" Text="{Binding DifferenceLabel}" FontSize="13" FontAttributes="Bold"
+                                           TextColor="{Binding DifferenceColor}" HorizontalTextAlignment="Center" VerticalOptions="Center" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+                <Label Text="{Binding Message}" FontSize="13" TextColor="{StaticResource StockRed}" />
+            </VerticalStackLayout>
+        </ScrollView>
+        <Button Grid.Row="1" Text="Enregistrer l’inventaire" Command="{Binding SaveCommand}"
+                BackgroundColor="{StaticResource StockOrange}" TextColor="White" FontAttributes="Bold"
+                CornerRadius="11" HeightRequest="52" Margin="18,8,18,10" />
+        <views:StockTabBar Grid.Row="2" SelectedTab="Inventaire" NavigateCommand="{Binding NavigateTabCommand}" />
+    </Grid>
+</ContentPage>

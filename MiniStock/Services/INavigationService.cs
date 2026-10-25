@@ -7,4 +7,6 @@ public interface INavigationService
     Task PopAsync();
 
     Task SetRootPageAsync<TPage>() where TPage : Page;
+
+    Task NavigateToStockTabAsync(string tab);
 }
